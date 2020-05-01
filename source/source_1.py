@@ -113,13 +113,14 @@ while True:
                   extra_etiketten,
                   wikkel)
 
-            dir_maak_comp_lijst
+
 
             pad_tmp = paden_dict['pad_tmp']
             pad_tmp2= paden_dict['pad_tmp2']
             pad_vdps = paden_dict['pad_naar_vdps']
             pad_sum = paden_dict['pad_sum']
             stapel = paden_dict['stapel']
+            VDP_map =paden_dict['VDP_map']
 
 
 
@@ -167,7 +168,12 @@ while True:
 
             map_tmp = sorted(Path(pad_tmp).glob('*.csv'))
             maplengte = len(map_tmp)
-            check_1 = csv_builder.check_map_op_mes(mes, maplengte,name_file_in,aantal_banen,afwijkings_waarde)
+            check_1 = csv_builder.check_map_op_mes(mes,
+                                                   maplengte,
+                                                   min_waarde,
+                                                   file_in,
+                                                   aantal_banen,
+                                                   afwijkings_waarde)
             if check_1 is not True:
                 print("message")
 
@@ -182,8 +188,12 @@ while True:
                 vdps = csv_builder.lijstmaker_uit_posixpad_csv(pad_vdps)
 
                 #  maak een lijst in lijst voor als er meer vdps gemaakt moeten worden.
-                print(f"is aantal combinaties {combinaties} gelijk aan  aantal VDP's {aantal_vdps}")
-                lijst_tmp2 = csv_builder.lijst_opbreker(vdps,mes, aantal_vdps)
+                print(f"aantal VDP's {aantal_vdps}")
+                lijst_tmp2 = csv_builder.lijst_opbreker(vdps, mes, aantal_vdps)
+
+                print(f'lijst_tmp2 = {lijst_tmp2}')
+
+                input_lijst = csv_builder.lijst_opbreker(lijst_tmp2, mes, aantal_vdps)
 
 
                 # csv_builder.horizontaal_samenvoegen(lijst_tmp2, pad_tmp2, mes)
@@ -196,7 +206,37 @@ while True:
 
                 if mes == 1:
 
-                    read_out.wikkel_1_baan_tc(lijst_tmp2)
+                    file_naam_uit = Path(VDP_map.joinpath(f"VDP_{ordernummer}_def.csv"))
+
+                    read_out.wikkel_1_baan_tc(input_lijst, file_naam_uit)
+
+                elif mes == 2:
+
+                    read_out.read_out_2(lijst_tmp2, ordernummer)
+
+                    lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
+                    print(lijst_uit_vdp_map)
+
+                    read_out.wikkel_2_baans_tc(lijst_uit_vdp_map,VDP_map)
+
+                elif mes == 3:
+                    pass
+
+                elif mes == 4:
+                    pass
+
+                elif mes == 5:
+                    pass
+
+                elif mes == 6:
+                    pass
+
+                elif mes == 7:
+                    pass
+
+
+
+
 
 
 

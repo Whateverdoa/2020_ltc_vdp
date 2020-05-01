@@ -47,13 +47,16 @@ def splitter(file_in,
 
     return print(begin_eind_lijst), print(be_LIJST)
 
-def check_map_op_mes(mes_controle,
+def check_map_op_mes(mes,
                      maplengte,
                      min_waarde_rol,
                      file_in,
                      aantal_banen,
                      afwijkings_waarde=0):
     # for loop of while true loop
+    mes_controle = aantal_banen
+    print(f'mes controle = {mes_controle}')
+    print(f'maplengte = {maplengte}')
     if mes_controle == maplengte:
         print("ok")
         print(afwijkings_waarde, maplengte)
@@ -62,7 +65,7 @@ def check_map_op_mes(mes_controle,
     elif mes_controle < maplengte:
         print("te weinig")
         # afwijkings_waarde += min_waarde_rol
-        print(afwijkings_waarde, maplengte)
+        print(mes_controle, maplengte)
         # mappen opschonen
         # nieuwe waardes toepassen in splitter()
         return False
@@ -134,7 +137,7 @@ def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit):
 
         with open(filenaam_uit, "w", encoding="utf-8") as fn:
 
-            print("beeld1;pdf1", file=fn)
+            print("omschrijving1;pdf1", file=fn)
 
         with open(filenaam_uit, "a", encoding="utf-8") as fn:
             for _ in range(list_length - 1):

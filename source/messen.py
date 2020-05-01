@@ -7,26 +7,27 @@ from pathlib import Path
 
 
 
-def wikkel_1_baan_tc(input_vdp_lijst):
+def wikkel_1_baan_tc(input_vdp_lijst, pad_uit):
     """last step voor VDP adding in en uitloop"""
 
     for index in range(len(input_vdp_lijst)):
-        file_naam = f"{input_vdp_lijst[index][0]}"
+        file_naam = f"{input_vdp_lijst[index][0][0]}"
+        file_naam_uit = f'{pad_uit}'
 
         with open(file_naam, "r", encoding="utf-8") as target:
             readline = target.readlines()
 
-        with open(file_naam, "w", encoding="utf-8") as target:
-            target.writelines("id;omschrijving_1;pdf_1\n")
+        with open(file_naam_uit, "w", encoding="utf-8") as target:
+            target.writelines("omschrijving_1;pdf_1\n")
             # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
             target.writelines(readline[1:5])
 
-            target.writelines("0;;stans.pdf\n" * 106)  # inloop
+            target.writelines(";stans.pdf\n" * 106)  # inloop
 
             target.writelines(readline[1:])  # bestand
 
-            target.writelines("0;;stans.pdf\n" * 100)  # uitloop
+            target.writelines(";stans.pdf\n" * 100)  # uitloop
 
             target.writelines(readline[1:10])
 
@@ -38,11 +39,11 @@ def read_out_2(lissst, ordernum):
         a = lissst[index][0]
         b = lissst[index][1]
 
-        color_1 = f"VDP_{index + 1}"
-        color_2 = f"{index}b"
+        vdp_nummer = f"VDP_{index + 1}"
 
-        file_1 = pd.read_csv(f"vdps/{a}", ";")
-        file_2 = pd.read_csv(f"vdps/{b}", ";")
+
+        file_1 = pd.read_csv(a, ";")
+        file_2 = pd.read_csv(b, ";")
 
         samengevoeg_2 = pd.concat([file_1, file_2], axis=1)
 
@@ -50,19 +51,23 @@ def read_out_2(lissst, ordernum):
 
         samengevoeg_2.fillna({"pdf_1": "stans.pdf", "pdf_2": "stans.pdf"}, inplace=True)
 
-        samengevoeg_2.to_csv(f"VDP_map/{ordernum}_{color_1}.csv", ";")
+        samengevoeg_2.to_csv(f"VDP_map/{ordernum}_{vdp_nummer}.csv", ";")
 
 
-def wikkel_2_baans_tc(input_vdp_lijst):
+def wikkel_2_baans_tc(input_vdp_lijst, map_uit):
     """last step voor VDP adding in en uitloop"""
 
     for index in range(len(input_vdp_lijst)):
+
         file_naam = f"{input_vdp_lijst[index]}"
 
-        with open(f"VDP_map/{file_naam}", "r", encoding="utf-8") as target:
+        filenaamuit = f'def_{Path(file_naam).stem}_def_vdp.csv'
+        file_naam_met_pad = Path(map_uit).joinpath(filenaamuit)
+
+        with open(file_naam, "r", encoding="utf-8") as target:
             readline = target.readlines()
 
-        with open(f"VDP_map/def_{file_naam}", "w", encoding="utf-8") as target:
+        with open(file_naam_met_pad, "w", encoding="utf-8") as target:
             target.writelines("id;omschrijving_1;pdf_1;omschrijving_2;pdf_2\n")
             # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
