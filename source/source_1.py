@@ -5,6 +5,7 @@ import os
 
 from source.paden import *
 import source.functions as csv_builder
+import source.messen as read_out
 
 
 '''
@@ -83,6 +84,12 @@ while True:
 
         elif event == "Ok":
 
+            dir_names_lijst_to_be_cleaned = ["tmp"]  # "vdps"
+
+            cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
+
+            for file_pad in cleaning_paden_met_Dir_lijst:
+                cleaner(file_pad)
 
 
             ordernummer = values['ordernummer_1']
@@ -131,6 +138,7 @@ while True:
 
             combinaties = aantal_rollen // mes
 
+
             print(f'mes = {mes}')
 
             print(f'aantal rollen= {row}')
@@ -165,23 +173,37 @@ while True:
 
             else:
                 print("banenbuilder begin")
+                # maak met de files uit tmp samengevoegde banen in csv , probleem hier is de kolommen
+                # todo kolommen zelfde als in da_remark
                 csv_builder.banen_builder(map_tmp, pad_tmp, pad_vdps)
                 print("banenbuilder klaar")
 
-
+                # verzamel de gemaakte csv's uit de vdps map in deze lijst
                 vdps = csv_builder.lijstmaker_uit_posixpad_csv(pad_vdps)
 
-
-                lijst_tmp2 = csv_builder.lijst_opbreker(vdps,mes, combinaties)
-
-
-                csv_builder.horizontaal_samenvoegen(lijst_tmp2, pad_tmp2, mes)
+                #  maak een lijst in lijst voor als er meer vdps gemaakt moeten worden.
+                print(f"is aantal combinaties {combinaties} gelijk aan  aantal VDP's {aantal_vdps}")
+                lijst_tmp2 = csv_builder.lijst_opbreker(vdps,mes, aantal_vdps)
 
 
-                horizontaal = csv_builder.lijstmaker_uit_posixpad_csv(pad_tmp2)
+                # csv_builder.horizontaal_samenvoegen(lijst_tmp2, pad_tmp2, mes)
+                #
+                #
+                # horizontaal = csv_builder.lijstmaker_uit_posixpad_csv(pad_tmp2)
+                #
+                #
+                # csv_builder.stapel_df_baan("VDP", horizontaal, ordernummer, stapel)
+
+                if mes == 1:
+
+                    read_out.wikkel_1_baan_tc(lijst_tmp2)
 
 
-                csv_builder.stapel_df_baan("VDP", horizontaal, ordernummer, stapel)
+
+
+
+
+
 
 
 
