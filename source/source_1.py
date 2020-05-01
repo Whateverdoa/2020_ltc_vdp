@@ -218,7 +218,7 @@ while True:
                     print(lijst_uit_vdp_map)
 
                     read_out.wikkel_2_baans_tc(lijst_uit_vdp_map,VDP_map)
-
+                # todo all knives
                 elif mes == 3:
                     pass
 
