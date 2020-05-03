@@ -22,7 +22,7 @@ while True:
         [sg.InputText('202012345', key='ordernummer_1'), sg.Text('Ordernummer', font=('Arial', 12))],
         [sg.InputText('4', key='mes'), sg.Text('mes', font=('Arial', 12))],
         [sg.InputText('1', key='vdp_aantal'), sg.Text("VDP's", font=('Arial', 12))],
-        [sg.InputText('1', key='afwijkings_waarde'), sg.Text("afwijking_waarde", font=('Arial', 12))],
+        [sg.InputText('0', key='afwijkings_waarde'), sg.Text("afwijking_waarde", font=('Arial', 12))],
 
         [sg.Text()],
 
@@ -41,7 +41,7 @@ while True:
         # [sg.InputText('', key='aantal_per_rol'),sg.Text('Aantal per rol')],
 
         [sg.InputText('1', key='overlevering_pct'), sg.Text('overlevering %')],
-        [sg.InputText('5', key='ee'), sg.Text('extra etiketten')],
+        [sg.InputText('10', key='ee'), sg.Text('extra etiketten')],
         [sg.InputText('10', key='wikkel'), sg.Text('Wikkel')],
 
         [sg.Button("Ok"), sg.Cancel()],
@@ -139,6 +139,8 @@ while True:
 
             combinaties = aantal_rollen // mes
 
+            inloop = etikettenY * 10
+
 
             print(f'mes = {mes}')
 
@@ -181,7 +183,7 @@ while True:
                 print("banenbuilder begin")
                 # maak met de files uit tmp samengevoegde banen in csv , probleem hier is de kolommen
                 # todo kolommen zelfde als in da_remark
-                csv_builder.banen_builder(map_tmp, pad_tmp, pad_vdps)
+                csv_builder.banen_builder(map_tmp, pad_tmp, pad_vdps,wikkel, extra_etiketten)
                 print("banenbuilder klaar")
 
                 # verzamel de gemaakte csv's uit de vdps map in deze lijst
@@ -191,7 +193,7 @@ while True:
                 print(f"aantal VDP's {aantal_vdps}")
                 lijst_tmp2 = csv_builder.lijst_opbreker(vdps, mes, aantal_vdps)
 
-                print(f'lijst_tmp2 = {lijst_tmp2}')
+                print(f'lijst_tmp2  is lijsten in lijst! = {lijst_tmp2}')
 
                 input_lijst = csv_builder.lijst_opbreker(lijst_tmp2, mes, aantal_vdps)
 
@@ -208,7 +210,7 @@ while True:
 
                     file_naam_uit = Path(VDP_map.joinpath(f"VDP_{ordernummer}_def.csv"))
 
-                    read_out.wikkel_1_baan_tc(input_lijst, file_naam_uit)
+                    read_out.wikkel_1_baan_tc(input_lijst, file_naam_uit, inloop)
 
                 elif mes == 2:
 
@@ -217,13 +219,21 @@ while True:
                     lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
                     print(lijst_uit_vdp_map)
 
-                    read_out.wikkel_2_baans_tc(lijst_uit_vdp_map,VDP_map)
-                # todo all knives
+                    read_out.wikkel_2_baans_tc(lijst_uit_vdp_map, VDP_map, inloop)
+
+
                 elif mes == 3:
-                    pass
+
+                    read_out.read_out_3(lijst_tmp2, ordernummer)
+
+                    lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
+                    print(f'lijst_uit_vdp_map = {lijst_uit_vdp_map}')
+
+                    read_out.wikkel_3_baans_tc(lijst_uit_vdp_map, pad_sum, inloop)
 
                 elif mes == 4:
-                    pass
+
+                    read_out.read_out_4(lijst_tmp2, ordernummer)
 
                 elif mes == 5:
                     pass
@@ -234,6 +244,9 @@ while True:
                 elif mes == 7:
                     pass
 
+            lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
+
+            csv_builder.wikkel_n_baans_tc(lijst_uit_vdp_map, etikettenY, inloop, mes, VDP_map)
 
 
 
@@ -253,7 +266,8 @@ while True:
 
 
 
-                # csv_builder.lijstmaker_uit_posixpad_csv(pad_vdps)
+
+            # csv_builder.lijstmaker_uit_posixpad_csv(pad_vdps)
 
 
 
@@ -262,20 +276,20 @@ while True:
 
 
 
-                #laatste regel lost alles op in zoutzuur:)
-                # for key, schoon_pad in paden_dict.items():
-                #     print(f'{key} is nu leeg')
-                #     cleaner(schoon_pad)
+            #laatste regel lost alles op in zoutzuur:)
+            # for key, schoon_pad in paden_dict.items():
+            #     print(f'{key} is nu leeg')
+            #     cleaner(schoon_pad)
 
-                dir_names_lijst_to_be_cleaned = ["tmp"]  # "vdps"
+            dir_names_lijst_to_be_cleaned = ["tmp"]  # "vdps"
 
-                cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
+            cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
 
-                for file_pad in cleaning_paden_met_Dir_lijst:
-                    cleaner(file_pad)
+            for file_pad in cleaning_paden_met_Dir_lijst:
+                cleaner(file_pad)
 
-                # for file_pad in cleaning_paden_met_Dir_lijst:
-                #     file_pad.rmdir()
+            # for file_pad in cleaning_paden_met_Dir_lijst:
+            #     file_pad.rmdir()
 
     window.close()
 

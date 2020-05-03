@@ -1,13 +1,11 @@
 """old skool werkend maken dan verder met nieuwe manier"""
 
-
 import pandas as pd
 import os
 from pathlib import Path
 
 
-
-def wikkel_1_baan_tc(input_vdp_lijst, pad_uit):
+def wikkel_1_baan_tc(input_vdp_lijst, pad_uit, inloop):
     """last step voor VDP adding in en uitloop"""
 
     for index in range(len(input_vdp_lijst)):
@@ -23,11 +21,11 @@ def wikkel_1_baan_tc(input_vdp_lijst, pad_uit):
 
             target.writelines(readline[1:5])
 
-            target.writelines(";stans.pdf\n" * 106)  # inloop
+            target.writelines(";stans.pdf\n" * (inloop - 5))  # inloop
 
             target.writelines(readline[1:])  # bestand
 
-            target.writelines(";stans.pdf\n" * 100)  # uitloop
+            target.writelines(";stans.pdf\n" * (inloop - 10))  # uitloop
 
             target.writelines(readline[1:10])
 
@@ -41,7 +39,6 @@ def read_out_2(lissst, ordernum):
 
         vdp_nummer = f"VDP_{index + 1}"
 
-
         file_1 = pd.read_csv(a, ";")
         file_2 = pd.read_csv(b, ";")
 
@@ -53,8 +50,9 @@ def read_out_2(lissst, ordernum):
 
         samengevoeg_2.to_csv(f"VDP_map/{ordernum}_{vdp_nummer}.csv", ";")
 
+    return len(lissst)
 
-def wikkel_2_baans_tc(input_vdp_lijst, map_uit):
+def wikkel_2_baans_tc(input_vdp_lijst, map_uit, inloop):
     """last step voor VDP adding in en uitloop"""
 
     for index in range(len(input_vdp_lijst)):
@@ -73,13 +71,14 @@ def wikkel_2_baans_tc(input_vdp_lijst, map_uit):
 
             target.writelines(readline[1:5])
 
-            target.writelines("0;;stans.pdf;;stans.pdf\n" * 106)  # inloop
+            target.writelines("0;;stans.pdf;;stans.pdf\n" * (inloop - 5))  # inloop
 
             target.writelines(readline[1:])  # bestand
 
-            target.writelines("0;;stans.pdf;;stans.pdf\n" * 100)  # uitloop
+            target.writelines("0;;stans.pdf;;stans.pdf\n" * (inloop - 10))  # uitloop
 
             target.writelines(readline[1:10])
+            target.writelines(readline[-10:])
 
 
 def read_out_3(lissst, ordernum):
@@ -90,13 +89,12 @@ def read_out_3(lissst, ordernum):
         b = lissst[index][1]
         c = lissst[index][2]
 
-        color_1 = f"VDP_{index + 1}"
-        color_2 = f"{index}b"
+        vdp_nummer = f"VDP_{index + 1}"
 
-        file_1 = pd.read_csv(f"vdps/{a}", ";")
-        file_2 = pd.read_csv(f"vdps/{b}", ";")
+        file_1 = pd.read_csv(a, ";")
+        file_2 = pd.read_csv(b, ";")
 
-        file_3 = pd.read_csv(f"vdps/{c}", ";")
+        file_3 = pd.read_csv(c, ";")
 
         samengevoeg_3 = pd.concat([file_1, file_2, file_3], axis=1)
 
@@ -114,19 +112,22 @@ def read_out_3(lissst, ordernum):
             inplace=True,
         )
 
-        samengevoeg_3.to_csv(f"VDP_map/{ordernum}_{color_1}.csv", ";")
+        samengevoeg_3.to_csv(f"VDP_map/{ordernum}_{vdp_nummer}.csv", ";")
 
 
-def wikkel_3_baans_tc(input_vdp_lijst):
+def wikkel_3_baans_tc(input_vdp_lijst, map_uit, inloop):
     """last step voor VDP adding in en uitloop"""
 
     for index in range(len(input_vdp_lijst)):
         file_naam = f"{input_vdp_lijst[index]}"
 
-        with open(f"VDP_map/{file_naam}", "r", encoding="utf-8") as target:
+        filenaamuit = f'def_{Path(file_naam).stem}_def_vdp.csv'
+        file_naam_met_pad = Path(map_uit).joinpath(filenaamuit)
+
+        with open(file_naam, "r", encoding="utf-8") as target:
             readline = target.readlines()
 
-        with open(f"VDP_map/def_{file_naam}", "w", encoding="utf-8") as target:
+        with open(file_naam_met_pad, "w", encoding="utf-8") as target:
             target.writelines(
                 "id;omschrijving_1;pdf_1;omschrijving_2;pdf_2;omschrijving_3;pdf_3\n"
             )
@@ -134,11 +135,11 @@ def wikkel_3_baans_tc(input_vdp_lijst):
 
             target.writelines(readline[1:5])
 
-            target.writelines("0;;stans.pdf;;stans.pdf;;stans.pdf\n" * 106)  # inloop
+            target.writelines("0;;stans.pdf;;stans.pdf;;stans.pdf\n" * (inloop-5))  # inloop
 
             target.writelines(readline[1:])  # bestand
 
-            target.writelines("0;;stans.pdf;;stans.pdf;;stans.pdf\n" * 100)  # uitloop
+            target.writelines("0;;stans.pdf;;stans.pdf;;stans.pdf\n" * (inloop-10))  # uitloop
 
             target.writelines(readline[1:10])
 
@@ -152,14 +153,14 @@ def read_out_4(lissst, ordernum):
         c = lissst[index][2]
         d = lissst[index][3]
 
-        color_1 = f"VDP_{index + 1}"
-        color_2 = f"{index}b"
+        vdp_nummer = f"VDP_{index + 1}"
 
-        file_1 = pd.read_csv(f"vdps/{a}", ";")
-        file_2 = pd.read_csv(f"vdps/{b}", ";")
 
-        file_3 = pd.read_csv(f"vdps/{c}", ";")
-        file_4 = pd.read_csv(f"vdps/{d}", ";")
+        file_1 = pd.read_csv(a, ";")
+        file_2 = pd.read_csv(b, ";")
+
+        file_3 = pd.read_csv(c, ";")
+        file_4 = pd.read_csv(d, ";")
 
         samengevoeg_4 = pd.concat([file_1, file_2, file_3, file_4], axis=1)
 
@@ -184,7 +185,7 @@ def read_out_4(lissst, ordernum):
             inplace=True,
         )
 
-        samengevoeg_4.to_csv(f"VDP_map/{ordernum}_{color_1}.csv", ";")
+        samengevoeg_4.to_csv(f"VDP_map/{ordernum}_{vdp_nummer}.csv", ";")
 
 
 def wikkel_4_baans_tc(input_vdp_lijst, data_uit_vdp=5):

@@ -59,7 +59,7 @@ def check_map_op_mes(mes,
     print(f'maplengte = {maplengte}')
     if mes_controle == maplengte:
         print("ok")
-        print(afwijkings_waarde, maplengte)
+        print(mes_controle, maplengte)
         return True
 
     elif mes_controle < maplengte:
@@ -72,11 +72,11 @@ def check_map_op_mes(mes,
 
     else :
         print("te veel")
-        print(afwijkings_waarde, maplengte)
+        print(mes_controle, maplengte)
         return False
 
 
-def print_trespa_rolls(colorcode, beeld, aantal, filenaam_uit, ee = 10):
+def print_trespa_rolls(colorcode, beeld, aantal, filenaam_uit, wikkel, ee = 10):
     """
     Take line from list and build csv for that line
     """
@@ -87,18 +87,18 @@ def print_trespa_rolls(colorcode, beeld, aantal, filenaam_uit, ee = 10):
         # open a file to append the strings too
         # print(f".;stans.pdf\n", end='', file=fn)
 
-        print(f"{colorcode}: {aantal} etiketten;leeg.pdf\n", end="", file=fn)
-
+        print(f"{colorcode}: {aantal} etiketten;leeg.pdf\n" * 1, end="", file=fn)
+        print(f";stans.pdf\n" * 1, end="", file=fn)
         print(f";{beeld}\n" * int(aantal * oap + ee), end="", file=fn)
         # print(f"{colorcode}, {int(aantal * oap)};leeg.pdf\n", end="", file=fn)
-
+        print(f";stans.pdf\n" * 1, end="", file=fn)
         print(f"{colorcode}: {aantal} etiketten;leeg.pdf\n", end="", file=fn)
-        print(f";stans.pdf\n", end="", file=fn)
+        print(f";stans.pdf\n" * wikkel, end="", file=fn)
 
     return 3 + int(aantal * oap + ee)
 
 
-def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit):
+def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit, wikkel, ee=10):
     count = 0
     for row in lijst_van_split_csv:
         file_Naam_In = f'{posix_pad_tmp / row}'
@@ -144,7 +144,7 @@ def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit):
                 a = str(new_input_list[beg:eind][0][0])
                 b = str(new_input_list[beg:eind][0][1])
                 c = int(new_input_list[beg:eind][0][2])
-                print_trespa_rolls(a, b, c, filenaam_uit)
+                print_trespa_rolls(a, b, c, filenaam_uit, wikkel, ee)
 
                 beg += 1
                 eind += 1
@@ -260,44 +260,51 @@ def stapel_df_baan(naam,lijstin, ordernummer, map_uit):
     return pd.DataFrame(stapel_df)
 
 
-def kolom_naam_gever_num_pdf_omschrijving(mes=1):
+def kolom_naam_gever_omschrijving_pdf(mes=1):
     """supplies a specific string  met de oplopende kolom namen num_1, pdf_1, omschrijving_1 etc"""
 
     def list_to_string(functie):
         kolom_namen = ""
         for kolomnamen in functie:
-            kolom_namen += kolomnamen + ","
+            kolom_namen += kolomnamen + ";"
         return kolom_namen[:-1] + "\n"
 
-    kollomnaamlijst = []
+    kolom_naamlijst = ['id']
 
     for count in range(1, mes + 1):
         # 5 = len (list) of mes
-        num = f"num_{count}"
+        # num = f"num_{count}"
         omschrijving = f"omschrijving_{count}"
         pdf = f"pdf_{count}"
-        kollomnaamlijst.append(num)
-        kollomnaamlijst.append(pdf)
-        kollomnaamlijst.append(omschrijving)
+        # kolom_naamlijst.append(num)
+        kolom_naamlijst.append(omschrijving)
+        kolom_naamlijst.append(pdf)
 
-    namen = list_to_string(kollomnaamlijst)
+
+    namen = list_to_string(kolom_naamlijst)
 
     return namen
 
 
-def wikkel_n_baans_tc(input_vdp_posix_lijst, etiketten_Y, in_loop, mes):
+def wikkel_n_baans_tc(input_vdp_posix_lijst, etiketten_Y, in_loop, mes, uit):
     """last step voor VDP adding in en uitloop"""
 
-    inlooplijst = (".,stans.pdf,," * mes)
-    inlooplijst = inlooplijst[:-1] + "\n" # -1 removes empty column in final file
+    inlooplijst = (";stans.pdf;" * mes)
+    inlooplijst = '0;'+ inlooplijst[:-1] + "\n" # -1 removes empty column in final file
 
     for file_naam in input_vdp_posix_lijst:
+
+
+        filenaamuit = f'def_{Path(file_naam).stem}_def_vdp.csv'
+        file_naam_met_pad = Path(uit).joinpath(filenaamuit)
+
         with open(f"{file_naam}", "r", encoding="utf-8") as target:
             readline = target.readlines()
+        # pad.with_name("VDP_map").joinpath(f'{pad.stem}_inloop.csv)'))
 
-        nieuwe_vdp_naam = VDP_Def / file_naam.name
-        with open(nieuwe_vdp_naam, "w", encoding="utf-8") as target:
-            target.writelines(kolom_naam_gever_num_pdf_omschrijving(mes))
+        print(file_naam_met_pad)
+        with open(file_naam_met_pad, "w", encoding="utf-8") as target:
+            target.writelines(kolom_naam_gever_omschrijving_pdf(mes))
 
             target.writelines(readline[1:etiketten_Y + 1])
             # target.writelines(readline[16:(etikettenY+etikettenY-8)])
