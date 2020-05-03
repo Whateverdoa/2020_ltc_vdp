@@ -232,13 +232,13 @@ def read_out_5(lissst, ordernum):
         color_1 = f"VDP_{index + 1}"
         color_2 = f"{index}b"
 
-        file_1 = pd.read_csv(f"vdps/{a}", ";")
-        file_2 = pd.read_csv(f"vdps/{b}", ";")
+        file_1 = pd.read_csv(a, ";")
+        file_2 = pd.read_csv(b, ";")
 
-        file_3 = pd.read_csv(f"vdps/{c}", ";")
-        file_4 = pd.read_csv(f"vdps/{d}", ";")
+        file_3 = pd.read_csv(c, ";")
+        file_4 = pd.read_csv(d, ";")
 
-        file_5 = pd.read_csv(f"vdps/{e}", ";")
+        file_5 = pd.read_csv(e, ";")
 
         samengevoeg_5 = pd.concat([file_1, file_2, file_3, file_4, file_5], axis=1)
 
@@ -313,14 +313,14 @@ def read_out_6(lissst, ordernum):
         color_1 = f"VDP_{index + 1}"
         color_2 = f"{index}b"
 
-        file_1 = pd.read_csv(f"vdps/{a}", ";")
-        file_2 = pd.read_csv(f"vdps/{b}", ";")
+        file_1 = pd.read_csv(a, ";")
+        file_2 = pd.read_csv(b, ";")
 
-        file_3 = pd.read_csv(f"vdps/{c}", ";")
-        file_4 = pd.read_csv(f"vdps/{d}", ";")
+        file_3 = pd.read_csv(c, ";")
+        file_4 = pd.read_csv(d, ";")
 
-        file_5 = pd.read_csv(f"vdps/{e}", ";")
-        file_6 = pd.read_csv(f"vdps/{f}", ";")
+        file_5 = pd.read_csv(e, ";")
+        file_6 = pd.read_csv(f, ";")
 
         samengevoeg_6 = pd.concat(
             [file_1, file_2, file_3, file_4, file_5, file_6], axis=1
@@ -397,16 +397,16 @@ def read_out_7(lissst, ordernum):
         color_1 = f"VDP_{index + 1}"
         # color_2 = f"{index}b"
 
-        file_1 = pd.read_csv(f"vdps/{a}", ";")
-        file_2 = pd.read_csv(f"vdps/{b}", ";")
+        file_1 = pd.read_csv(a, ";")
+        file_2 = pd.read_csv(b, ";")
 
-        file_3 = pd.read_csv(f"vdps/{c}", ";")
-        file_4 = pd.read_csv(f"vdps/{d}", ";")
+        file_3 = pd.read_csv(c, ";")
+        file_4 = pd.read_csv(d, ";")
 
-        file_5 = pd.read_csv(f"vdps/{e}", ";")
-        file_6 = pd.read_csv(f"vdps/{f}", ";")
+        file_5 = pd.read_csv(e, ";")
+        file_6 = pd.read_csv(f, ";")
 
-        file_7 = pd.read_csv(f"vdps/{g}", ";")
+        file_7 = pd.read_csv(g, ";")
 
         samengevoeg_7 = pd.concat(
             [file_1, file_2, file_3, file_4, file_5, file_6, file_7], axis=1

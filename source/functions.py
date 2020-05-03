@@ -19,7 +19,7 @@ def splitter(file_in,
     be_LIJST = []
 
     for num in range(aantal_rollen):
-        b = file_in.aantal.iloc[a:num].sum()
+        b = file_in.aantal.iloc[a:num+1].sum()
         # print(a, num)
 
         if num == (len(file_in) - 1):
@@ -36,7 +36,7 @@ def splitter(file_in,
 
             csv_naam = Path(f"{outgoing_posix_pad}/{a:>{0}{5}}.csv")
             print(csv_naam)
-            file_in.iloc[a : (num + 1)].to_csv(csv_naam)
+            file_in.iloc[a : (num + 1)].to_csv(csv_naam) # num + 1 ??
 
             begin_eind_lijst.append([b, a, num])
             be_LIJST.append([a, num + 1])
@@ -93,7 +93,7 @@ def print_trespa_rolls(colorcode, beeld, aantal, filenaam_uit, wikkel, ee = 10):
         # print(f"{colorcode}, {int(aantal * oap)};leeg.pdf\n", end="", file=fn)
         print(f";stans.pdf\n" * 1, end="", file=fn)
         print(f"{colorcode}: {aantal} etiketten;leeg.pdf\n", end="", file=fn)
-        print(f";stans.pdf\n" * wikkel, end="", file=fn)
+        # print(f";stans.pdf\n" * wikkel, end="", file=fn)
 
     return 3 + int(aantal * oap + ee)
 
@@ -203,10 +203,11 @@ def kol_naam_lijst_builder(mes_waarde=1):
 
     for count in range(1, mes_waarde + 1):
         # 5 = len (list) of mes
-        num = f"kolom_{count}"
+        # num = f"kolom_{count}"
         omschrijving = f"omschrijving_{count}"
         pdf = f"pdf_{count}"
-        kollomnaamlijst.append(num)
+
+        kollomnaamlijst.append(omschrijving)
         kollomnaamlijst.append(pdf)
         # kollomnaamlijst.append(omschrijving)
 
@@ -242,7 +243,7 @@ def horizontaal_samenvoegen(opgebroken_posix_lijst, map_uit, meswaarde):
         # print(vdp_hor_stap)
         df = lees_per_lijst(lijst_met_posix, meswaarde)
         # print(df.tail(5))
-
+        # todo fillna toevoegen!!!!!!
         lees_per_lijst(lijst_met_posix, meswaarde).to_csv(vdp_hor_stap, index=0)
 
         count += 1

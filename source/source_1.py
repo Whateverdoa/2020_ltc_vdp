@@ -5,7 +5,9 @@ import os
 
 from source.paden import *
 import source.functions as csv_builder
-import source.messen as read_out
+import source.messen as old_skool_read_outs
+
+import source.read_out as builder
 
 
 '''
@@ -210,39 +212,63 @@ while True:
 
                     file_naam_uit = Path(VDP_map.joinpath(f"VDP_{ordernummer}_def.csv"))
 
-                    read_out.wikkel_1_baan_tc(input_lijst, file_naam_uit, inloop)
+                    # read_out.wikkel_1_baan_tc(input_lijst, file_naam_uit, inloop)
 
                 elif mes == 2:
 
-                    read_out.read_out_2(lijst_tmp2, ordernummer)
+                    old_skool_read_outs.read_out_2(lijst_tmp2, ordernummer)
 
-                    lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
-                    print(lijst_uit_vdp_map)
+                    # lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
+                    # print(lijst_uit_vdp_map)
 
-                    read_out.wikkel_2_baans_tc(lijst_uit_vdp_map, VDP_map, inloop)
+                    # read_out.wikkel_2_baans_tc(lijst_uit_vdp_map, VDP_map, inloop)
 
 
                 elif mes == 3:
-
-                    read_out.read_out_3(lijst_tmp2, ordernummer)
-
-                    lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
-                    print(f'lijst_uit_vdp_map = {lijst_uit_vdp_map}')
-
-                    read_out.wikkel_3_baans_tc(lijst_uit_vdp_map, pad_sum, inloop)
+                    old_skool_read_outs.read_out_3(lijst_tmp2, ordernummer)
 
                 elif mes == 4:
-
-                    read_out.read_out_4(lijst_tmp2, ordernummer)
+                    old_skool_read_outs.read_out_4(lijst_tmp2, ordernummer)
 
                 elif mes == 5:
-                    pass
+                    old_skool_read_outs.read_out_5(lijst_tmp2, ordernummer)
 
                 elif mes == 6:
-                    pass
+                    old_skool_read_outs.read_out_6(lijst_tmp2, ordernummer)
 
                 elif mes == 7:
+                    old_skool_read_outs.read_out_7(lijst_tmp2, ordernummer)
+
+                elif mes == 8: # testing knife mes
+
+                    builder.horizontaal_samenvoegen(lijst_tmp2, VDP_map, mes)
+
+                elif mes == 9:
                     pass
+
+                elif mes == 10:
+                    pass
+
+                elif mes ==  11 :
+                    pass
+
+                elif mes ==  12 :
+                    pass
+
+                elif mes ==  13 :
+                    pass
+
+                elif mes ==  14 :
+                    pass
+
+                elif mes ==  15 :
+                    pass
+
+
+
+
+
+
 
             lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
 
