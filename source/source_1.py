@@ -98,7 +98,7 @@ while True:
             mes = int(values['mes'])
             aantal_vdps = int(values['vdp_aantal'])
             etikettenY = int(values['Y_waarde'])
-            name_file_in = values['Browse']
+            name_file_in = Path(values['Browse'])
             # name_file_in = Path(r"C:\Users\Dhr. Ten Hoonte\PycharmProjects\2020_ltc_vdp\source\file_in\202014342_proef.csv")
             afwijkings_waarde = int(values['afwijkings_waarde'])
 
@@ -197,7 +197,7 @@ while True:
 
                 print(f'lijst_tmp2  is lijsten in lijst! = {lijst_tmp2}')
 
-                input_lijst = csv_builder.lijst_opbreker(lijst_tmp2, mes, aantal_vdps)
+                input_lijst = sorted(csv_builder.lijst_opbreker(lijst_tmp2, mes, aantal_vdps))
 
 
                 # csv_builder.horizontaal_samenvoegen(lijst_tmp2, pad_tmp2, mes)
@@ -241,7 +241,7 @@ while True:
 
                 elif mes == 8: # testing knife mes
 
-                    builder.horizontaal_samenvoegen(lijst_tmp2, VDP_map, mes)
+                    builder.horizontaal_samenvoegen(lijst_tmp2, VDP_map, mes, ordernummer)
 
                 elif mes == 9:
                     pass
@@ -271,6 +271,8 @@ while True:
 
 
             lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
+
+            #todo fillna functie
 
             csv_builder.wikkel_n_baans_tc(lijst_uit_vdp_map, etikettenY, inloop, mes, VDP_map)
 

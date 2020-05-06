@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 
-
+# todo telt de laatste rol niet mee in sum,  gebruikt hem wel
 def splitter(file_in,
              aantal_banen,
              afwijkings_waarde,
@@ -80,6 +80,7 @@ def print_trespa_rolls(colorcode, beeld, aantal, filenaam_uit, wikkel, ee = 10):
     """
     Take line from list and build csv for that line
     """
+    # todo finetune wikkel
     oap = overaantalpercentage = 1  # 1.02 = 2% overlevering
     # ee = 4  # = etiketten overlevering handmatig
 
@@ -104,7 +105,7 @@ def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit, wikkel
         file_Naam_In = f'{posix_pad_tmp / row}'
         # print(file_Naam_In)
 
-
+        # todo name aanpassen werkt niet zo in mac
         # file_Naam_In = f"{naam}_inschiet.csv"
         filenaam_uit = f"{posix_pad_vdps_uit}\\vdp{count:>{0}{5}}_bewerkt.csv"
         # print(file_Naam_In)
@@ -148,7 +149,7 @@ def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit, wikkel
 
                 beg += 1
                 eind += 1
-
+        # todo return toevoegen
 
 
 def lijstmaker_uit_posixpad_csv(padnaam):
@@ -159,7 +160,7 @@ def lijstmaker_uit_posixpad_csv(padnaam):
 def html_sum_form_writer(titel="summary", **kwargs):
     """"build a html file for summary purposes with  *kwargv
     search jinja and flask
-    css link toevoegen
+    # todo css link toevoegen
     """
     for key, value in kwargs.items():
         print(key, value)
@@ -214,6 +215,15 @@ def kol_naam_lijst_builder(mes_waarde=1):
     # return ["id"] + kollomnaamlijst
     return kollomnaamlijst
 
+def filna_dict(mes):
+    """"werkt. maar ga een dict comprehension proberen."""
+    key = [f'pdf_{count+1}'for count in range(mes)]
+    value = ['stans.pdf'for count in range(mes)]
+    filna_tobe_inserted = dict(zip(key,value))
+    return filna_tobe_inserted
+
+
+
 
 def lees_per_lijst(lijst_met_posix_paden, mes_waarde):
     """1 lijst in len(lijst) namen uit
@@ -228,10 +238,16 @@ def lees_per_lijst(lijst_met_posix_paden, mes_waarde):
         concatlist.append(naam)
         count += 1
     kolomnamen = kol_naam_lijst_builder(mes_waarde)
+    filnaa_dict = filna_dict(mes_waarde)
+    print(filnaa_dict)
     lijst_over_axis_1 = pd.concat(concatlist, axis=1)
     lijst_over_axis_1.columns = [kolomnamen]
 
-    # return lijst_over_axis_1.to_csv("test2.csv", index=0)
+
+
+    lijst_over_axis_1.fillna(value=filnaa_dict)
+
+    # lijst_over_axis_1.fillna(filnaa_dict,inplace=True) #nieuw
     return lijst_over_axis_1
 
 
