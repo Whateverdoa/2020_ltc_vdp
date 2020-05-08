@@ -22,7 +22,7 @@ while True:
     layout = [
         [sg.Text('VDP invul formulier', size=(30, 1), font=('Arial', 14, 'bold'), text_color="orange")],
         [sg.InputText('202012345', key='ordernummer_1'), sg.Text('Ordernummer', font=('Arial', 12))],
-        [sg.InputText('4', key='mes'), sg.Text('mes', font=('Arial', 12))],
+        [sg.InputText('8', key='mes'), sg.Text('mes', font=('Arial', 12))],
         [sg.InputText('1', key='vdp_aantal'), sg.Text("VDP's", font=('Arial', 12))],
         [sg.InputText('0', key='afwijkings_waarde'), sg.Text("afwijking_waarde", font=('Arial', 12))],
 
@@ -65,6 +65,16 @@ while True:
         event, values = window.read()
 
         if event in ('Exit', None):
+            dir_names_lijst_to_be_cleaned = ["tmp", "VDP_map", "vdps", "stapel", "summary", "tmp2"]  # "vdps"
+
+            cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
+
+            for file_pad in cleaning_paden_met_Dir_lijst:
+                cleaner(file_pad)
+
+            for file_pad in cleaning_paden_met_Dir_lijst:
+                file_pad.rmdir()
+
             exit(0)
 
         elif event == 'SaveSettings':
@@ -80,6 +90,16 @@ while True:
             # load(form)
 
         elif event == "Cancel":
+
+            dir_names_lijst_to_be_cleaned = ["tmp", "VDP_map", "vdps", "stapel", "summary", "tmp2"]  # "vdps"
+
+            cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
+
+            for file_pad in cleaning_paden_met_Dir_lijst:
+                cleaner(file_pad)
+
+            for file_pad in cleaning_paden_met_Dir_lijst:
+                file_pad.rmdir()
             # todo screen message vraag of er echt gecancelled moet worden:)
             # todo clear  screen  als in een reset
             exit(0)
@@ -123,6 +143,7 @@ while True:
             pad_sum = paden_dict['pad_sum']
             stapel = paden_dict['stapel']
             VDP_map =paden_dict['VDP_map']
+            result = paden_dict["result"]
 
 
 
@@ -151,6 +172,18 @@ while True:
             print(f'totaal van lijst is {totaal} en het gemiddelde over {aantal_banen} banen is {opb}')
 
             print(f'kleinste rol {min_waarde}, de afwijking van het gemiddelde is {afwijkings_waarde}')
+
+            #todo explore pprint en jinja2 for summary
+            csv_builder.summary_file("result", ordernummer,
+                                     mes,
+                                     row,
+                                     totaal,
+                                     ongeveer_per_baan,
+                                     afwijkings_waarde,
+                                     inloop,
+                                     name_file_in,
+                                     etikettenY,
+                                     aantal_vdps)
 
             # begin stappenplan stap 0  afwijking berekenaar splitter
 
@@ -200,81 +233,10 @@ while True:
                 input_lijst = sorted(csv_builder.lijst_opbreker(lijst_tmp2, mes, aantal_vdps))
 
 
-                # csv_builder.horizontaal_samenvoegen(lijst_tmp2, pad_tmp2, mes)
-                #
-                #
-                # horizontaal = csv_builder.lijstmaker_uit_posixpad_csv(pad_tmp2)
-                #
-                #
-                # csv_builder.stapel_df_baan("VDP", horizontaal, ordernummer, stapel)
-
-                if mes == 1:
-
-                    file_naam_uit = Path(VDP_map.joinpath(f"VDP_{ordernummer}_def.csv"))
-
-                    # read_out.wikkel_1_baan_tc(input_lijst, file_naam_uit, inloop)
-
-                elif mes == 2:
-
-                    old_skool_read_outs.read_out_2(lijst_tmp2, ordernummer)
-
-                    # lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
-                    # print(lijst_uit_vdp_map)
-
-                    # read_out.wikkel_2_baans_tc(lijst_uit_vdp_map, VDP_map, inloop)
-
-
-                elif mes == 3:
-                    old_skool_read_outs.read_out_3(lijst_tmp2, ordernummer)
-
-                elif mes == 4:
-                    old_skool_read_outs.read_out_4(lijst_tmp2, ordernummer)
-
-                elif mes == 5:
-                    old_skool_read_outs.read_out_5(lijst_tmp2, ordernummer)
-
-                elif mes == 6:
-                    old_skool_read_outs.read_out_6(lijst_tmp2, ordernummer)
-
-                elif mes == 7:
-                    old_skool_read_outs.read_out_7(lijst_tmp2, ordernummer)
-
-                elif mes == 8: # testing knife mes
-
-                    builder.horizontaal_samenvoegen(lijst_tmp2, VDP_map, mes, ordernummer)
-
-                elif mes == 9:
-                    pass
-
-                elif mes == 10:
-                    pass
-
-                elif mes ==  11 :
-                    pass
-
-                elif mes ==  12 :
-                    pass
-
-                elif mes ==  13 :
-                    pass
-
-                elif mes ==  14 :
-                    pass
-
-                elif mes ==  15 :
-                    pass
 
 
 
-
-
-
-
-            lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
-
-            #todo fillna functie
-
-            csv_builder.wikkel_n_baans_tc(lijst_uit_vdp_map, etikettenY, inloop, mes, VDP_map)
+                builder.horizontaal_samenvoegen(lijst_tmp2, VDP_map, mes, ordernummer)
 
 
 
@@ -283,41 +245,54 @@ while True:
 
 
 
+                lijst_uit_vdp_map = csv_builder.lijstmaker_uit_posixpad_csv(VDP_map)
+                print("1")
+                csv_builder.wikkel_n_baans_tc(lijst_uit_vdp_map, etikettenY, inloop, mes, result)
+                print("2 inloop uitloop")
+                # todo fine tune in uit
+
+                result_map = csv_builder.lijstmaker_uit_posixpad_csv(result)
+                print("3 file naar result zonder NAN")
+                builder.end_result_csv(result_map, mes)
+
+
+                # todo summary  output hier
+
+
+                key_in_values_as_string =['ordernummer_1',
+                                          'mes',
+                                          'vdp_aantal',
+                                          'afwijkings_waarde',
+                                          'Y_waarde',
+                                          'Browse',
+                                          'overlevering_pct',
+                                          'ee',
+                                          'wikkel']
+
+                values_to_use_in_summary = []
+                for key in key_in_values_as_string:
+                    values_to_use_in_summary.append(values[key])
+
+                sum_values = dict(zip(key_in_values_as_string,values_to_use_in_summary))
+
+                csv_builder.html_sum_form_writer(ordernummer,**sum_values)
 
 
 
+                #laatste regels lost alles op in zoutzuur:)
+                # for key, schoon_pad in paden_dict.items():
+                #     print(f'{key} is nu leeg')
+                #     cleaner(schoon_pad)
 
+                dir_names_lijst_to_be_cleaned = ["tmp","VDP_map","vdps","stapel","summary","tmp2"]  # "vdps"
 
+                cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
 
+                for file_pad in cleaning_paden_met_Dir_lijst:
+                    cleaner(file_pad)
 
-
-
-
-
-
-            # csv_builder.lijstmaker_uit_posixpad_csv(pad_vdps)
-
-
-
-
-
-
-
-
-            #laatste regel lost alles op in zoutzuur:)
-            # for key, schoon_pad in paden_dict.items():
-            #     print(f'{key} is nu leeg')
-            #     cleaner(schoon_pad)
-
-            dir_names_lijst_to_be_cleaned = ["tmp"]  # "vdps"
-
-            cleaning_paden_met_Dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst_to_be_cleaned]
-
-            for file_pad in cleaning_paden_met_Dir_lijst:
-                cleaner(file_pad)
-
-            # for file_pad in cleaning_paden_met_Dir_lijst:
-            #     file_pad.rmdir()
+                # for file_pad in cleaning_paden_met_Dir_lijst:
+                #     file_pad.rmdir()
 
     window.close()
 

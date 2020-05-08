@@ -11,7 +11,8 @@ pad_naam_lijst = ["pad_sum",
                   "pad_file_in",
                   "pad_naar_vdps",
                   "stapel",
-                  "VDP_map"]
+                  "VDP_map",
+                  "result"]
 print(pad_naam_lijst)
 # lijst met alle te gebruiken directories
 dir_names_lijst = ["summary",
@@ -20,7 +21,8 @@ dir_names_lijst = ["summary",
                    "file_in",
                    "vdps",
                    "stapel",
-                   "VDP_map"]
+                   "VDP_map",
+                   "result"]
 
 # list comprehension om alle paden te maken
 paden_met_dir_lijst = [Path(wdir, dirnaam) for dirnaam in dir_names_lijst]

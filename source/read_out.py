@@ -1,6 +1,7 @@
 import pandas as pd
 import pathlib as Path
 
+
 def kol_naam_lijst_builder(mes_waarde=1):
     kollomnaamlijst = []
 
@@ -20,13 +21,10 @@ def kol_naam_lijst_builder(mes_waarde=1):
 
 def filna_dict(mes):
     """"werkt. maar ga een dict comprehension proberen."""
-    key = [f'pdf_{count+1}'for count in range(mes)]
-    value = ['stans.pdf'for count in range(mes)]
-    filna_tobe_inserted = dict(zip(key,value))
+    key = [f'pdf_{count + 1}' for count in range(mes)]
+    value = ['stans.pdf' for count in range(mes)]
+    filna_tobe_inserted = dict(zip(key, value))
     return filna_tobe_inserted
-
-
-
 
 
 def lees_per_lijst(lijst_met_posix_paden, mes_waarde):
@@ -48,28 +46,23 @@ def lees_per_lijst(lijst_met_posix_paden, mes_waarde):
 
     lijst_over_axis_1 = pd.concat(concatlist, axis=1)
     print(lijst_over_axis_1.head(10))
-    print('-'*40)
+    print('-' * 40)
 
-    df = lijst_over_axis_1.columns = [kolomnamen]
-    df = lijst_over_axis_1.fillna(filnaa_dict, inplace=True)
-
-
-
+    lijst_over_axis_1.columns = [kolomnamen]
+    # lijst_over_axis_1.fillna(filnaa_dict, inplace=True)
 
     # lijst_over_axis_1['pdf_8'].fillna("stans.pdf", inplace=True)
     # lijst_over_axis_1.fillna(value=filnaa_dict)
     # return lijst_over_axis_1.to_csv("test2.csv", index=0)
-    # return lijst_over_axis_1
-    return df
-
-
+    return lijst_over_axis_1
+    # return df
 
 
 def horizontaal_samenvoegen(opgebroken_posix_lijst, map_uit, meswaarde, ordernummer):
     count = 1
     for lijst_met_posix in opgebroken_posix_lijst:
-        vdp_hor_stap = f'{ordernummer}_{count:>{0}{4}}.csv'
-        vdp_hor_stap = map_uit/ vdp_hor_stap
+        vdp_hor_stap = f'{ordernummer}_vdp_{count:>{0}{4}}.csv'
+        vdp_hor_stap = map_uit / vdp_hor_stap
 
         print(vdp_hor_stap)
         # df = lees_per_lijst(lijst_met_posix, meswaarde)
@@ -81,7 +74,7 @@ def horizontaal_samenvoegen(opgebroken_posix_lijst, map_uit, meswaarde, ordernum
     return print("hor")
 
 
-def stapel_df_baan(naam,lijstin, ordernummer, map_uit):
+def stapel_df_baan(naam, lijstin, ordernummer, map_uit):
     stapel_df = []
     for lijst_naam in lijstin:
         # print(lijst_naam)
@@ -91,22 +84,30 @@ def stapel_df_baan(naam,lijstin, ordernummer, map_uit):
     pd.concat(stapel_df, axis=0).to_csv(f"{map_uit}/{naam}_{ordernummer}.csv", ",")
     return pd.DataFrame(stapel_df)
 
+
 # todo iterate over laatste VDP_final map
-pad= Path(r"C:\Users\Dhr. Ten Hoonte\PycharmProjects\2020_ltc_vdp\source\VDP_map\def_vdp_hor_stap_0001_def_vdp.csv")
-file_uit = pad.parent.joinpath("nieuw.csv")
-def filna_dict(mes):
-    """"werkt. maar ga een dict comprehension proberen."""
-    key = [f'pdf_{count+1}'for count in range(mes)]
-    value = ['stans.pdf'for count in range(mes)]
-    filna_tobe_inserted = dict(zip(key,value))
-    return filna_tobe_inserted
+# pad = Path(r"C:\Users\Dhr. Ten Hoonte\PycharmProjects\2020_ltc_vdp\source\VDP_map\def_vdp_hor_stap_0001_def_vdp.csv")
+# file_uit = pad.parent.joinpath("nieuw.csv")
+#
+#
 
-fin = filna_dict(8)
+def end_result_csv(final_list, mes):
+    """last function to remove all NaNs in csv file"""
 
+    def filna_dict(mes):
+        """werkt. maar ga een dict comprehension proberen."""
+        key = [f'pdf_{count + 1}' for count in range(mes)]
+        value = ['stans.pdf' for count in range(mes)]
+        filna_tobe_inserted = dict(zip(key, value))
+        return filna_tobe_inserted
 
-df = pd.read_csv(pad, delimiter=";")
-df.fillna(fin, inplace=True)
-df.to_csv(file_uit, index=0)
+    fin = filna_dict(mes)
 
+    for pad in final_list:
 
+        df = pd.read_csv(pad, delimiter=";")
+        df.fillna(fin, inplace=True)
+        df.to_csv(pad, index=0)
+        print(pad)
 
+    return fin

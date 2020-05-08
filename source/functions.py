@@ -107,7 +107,7 @@ def banen_builder(lijst_van_split_csv, posix_pad_tmp, posix_pad_vdps_uit, wikkel
 
         # todo name aanpassen werkt niet zo in mac
         # file_Naam_In = f"{naam}_inschiet.csv"
-        filenaam_uit = f"{posix_pad_vdps_uit}\\vdp{count:>{0}{5}}_bewerkt.csv"
+        filenaam_uit = Path(posix_pad_vdps_uit).joinpath(f'vdp{count:>{0}{5}}_bewerkt.csv')
         # print(file_Naam_In)
         # print(filenaam_uit)
         count += 1
@@ -157,15 +157,15 @@ def lijstmaker_uit_posixpad_csv(padnaam):
     return rollen_posix_lijst
 
 
-def html_sum_form_writer(titel="summary", **kwargs):
+def html_sum_form_writer(titel, **kwargs):
     """"build a html file for summary purposes with  *kwargv
     search jinja and flask
     # todo css link toevoegen
     """
-    for key, value in kwargs.items():
-        print(key, value)
+    # for key, value in kwargs.items():
+    #     print(key, value)
 
-    naam_html_file = f'summary/{titel}_.html'
+    naam_html_file = f'result/{titel}_summary.html'
     with open(naam_html_file, "w") as f_html:
 
         #         for key, value in kwargs.items():
@@ -183,7 +183,43 @@ def html_sum_form_writer(titel="summary", **kwargs):
 
         print("         </body>", file=f_html)
         print(" </html>", file=f_html)
+
+
     return naam_html_file
+# todo summary banen invoegen
+def summary_file(pad, order_num, *args):
+
+    summary_values_from_arg=[]
+    for arg in args:
+        summary_values_from_arg.append(arg)
+
+    sum_filename_out = f'{order_num}_sum.txt'
+
+    pad_en_file = Path(pad).joinpath(sum_filename_out)
+
+    with open(pad_en_file, 'w', encoding ='utf-8') as summary:
+        print(f'ordernummer: {order_num}', file = summary)
+        print(f'aantal gemaakte vdp\'s = {summary_values_from_arg[8]}')
+        print(f'gebruikte csv file = {summary_values_from_arg[6]}', file=summary)
+        print("_" * 50, file= summary)
+        print(
+            f'totaal van lijst is {summary_values_from_arg[2]} en het gemiddelde over {summary_values_from_arg[1]} banen is {summary_values_from_arg[3]}',
+            file=summary)
+        print(f'afwijking over het gemiddelde: {summary_values_from_arg[4]}', file=summary)
+        print("_" * 50, file=summary)
+
+        print(f'mes: {summary_values_from_arg[0]}', file = summary)
+        print(f'aantal rollen : {summary_values_from_arg[1]}', file = summary)
+        # print(f'totaal: {summary_values_from_arg[2]}', file = summary)
+        # print(f'gemiddelde: {summary_values_from_arg[3]}', file = summary)
+
+        print(f'inloop en uitloop: {summary_values_from_arg[5]}', file = summary)
+        print(f"Y waarde ={summary_values_from_arg[7]}", file= summary)
+        print("_" * 50, file= summary)
+        print("aantal staat voor en elke rol op sluit etiket", file=summary)
+
+
+    return len(summary_values_from_arg)
 
 
 def lijst_opbreker(lijst_in, mes, combinaties):
@@ -312,7 +348,7 @@ def wikkel_n_baans_tc(input_vdp_posix_lijst, etiketten_Y, in_loop, mes, uit):
     for file_naam in input_vdp_posix_lijst:
 
 
-        filenaamuit = f'def_{Path(file_naam).stem}_def_vdp.csv'
+        filenaamuit = f'def_{Path(file_naam).stem}.csv'
         file_naam_met_pad = Path(uit).joinpath(filenaamuit)
 
         with open(f"{file_naam}", "r", encoding="utf-8") as target:

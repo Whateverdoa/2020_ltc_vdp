@@ -5,7 +5,8 @@ from source.functions import (print_trespa_rolls,
                               splitter,
                               check_map_op_mes,
                               banen_builder,
-                              filna_dict)
+                              filna_dict,
+                              summary_file)
 from source.read_out import kol_naam_lijst_builder
 
 
@@ -30,22 +31,12 @@ def test_filnadict():
     testing_filna_dikt_with = filna_dict(3)
     assert testing_filna_dikt_with == expected
 
-# def test_splitter():
-#     split =  splitter(test_file_in,8,10,10000,10,1000,pad)
-#
-#
-# def test_checkmapenmes():
-#     pass
-#
-#
-# def test_trespa_rolls():
-#
-#     assert 1 ==2
-#
-#
-# def test_banenbuilder():
-#
-#     assert 2==2
+def test_sum_file():
+    testlijst = [1, 2, 3, 4, 5, 6, 7]
+    twee_args = summary_file("result","esther",*testlijst)
+
+    expected = len(testlijst)
+    assert twee_args == expected
 
 
 
