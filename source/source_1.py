@@ -6,6 +6,7 @@ import os
 from source.paden import *
 import source.functions as csv_builder
 import source.messen as old_skool_read_outs
+from source.summary import verticale_summary
 
 import source.read_out as builder
 
@@ -233,15 +234,7 @@ while True:
                 input_lijst = sorted(csv_builder.lijst_opbreker(lijst_tmp2, mes, aantal_vdps))
 
 
-
-
-
                 builder.horizontaal_samenvoegen(lijst_tmp2, VDP_map, mes, ordernummer)
-
-
-
-
-
 
 
 
@@ -277,7 +270,12 @@ while True:
 
                 csv_builder.html_sum_form_writer(ordernummer,**sum_values)
 
+                summary = [x for x in
+                           os.listdir(pad_tmp)
+                           if x.endswith(".csv")]
+                print(f'lijst ={summary}')
 
+                verticale_summary(summary, mes, result, ordernummer, aantal_vdps)
 
                 #laatste regels lost alles op in zoutzuur:)
                 # for key, schoon_pad in paden_dict.items():

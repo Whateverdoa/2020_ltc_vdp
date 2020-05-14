@@ -88,13 +88,15 @@ def print_trespa_rolls(colorcode, beeld, aantal, filenaam_uit, wikkel, ee = 10):
         # open a file to append the strings too
         # print(f".;stans.pdf\n", end='', file=fn)
 
+        print(f";stans.pdf\n" * wikkel, end="", file=fn)
         print(f"{colorcode}: {aantal} etiketten;leeg.pdf\n" * 1, end="", file=fn)
         print(f";stans.pdf\n" * 1, end="", file=fn)
+
         print(f";{beeld}\n" * int(aantal * oap + ee), end="", file=fn)
-        # print(f"{colorcode}, {int(aantal * oap)};leeg.pdf\n", end="", file=fn)
+
         print(f";stans.pdf\n" * 1, end="", file=fn)
         print(f"{colorcode}: {aantal} etiketten;leeg.pdf\n", end="", file=fn)
-        # print(f";stans.pdf\n" * wikkel, end="", file=fn)
+        print(f";stans.pdf\n" * 1, end="", file=fn)
 
     return 3 + int(aantal * oap + ee)
 
@@ -203,7 +205,7 @@ def summary_file(pad, order_num, *args):
         print(f'gebruikte csv file = {summary_values_from_arg[6]}', file=summary)
         print("_" * 50, file= summary)
         print(
-            f'totaal van lijst is {summary_values_from_arg[2]} en het gemiddelde over {summary_values_from_arg[1]} banen is {summary_values_from_arg[3]}',
+            f'totaal van lijst is {summary_values_from_arg[2]} en het gemiddelde over {summary_values_from_arg[8]*summary_values_from_arg[0]} banen is {summary_values_from_arg[3]}',
             file=summary)
         print(f'afwijking over het gemiddelde: {summary_values_from_arg[4]}', file=summary)
         print("_" * 50, file=summary)
