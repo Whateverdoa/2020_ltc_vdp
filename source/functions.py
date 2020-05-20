@@ -63,7 +63,7 @@ def check_map_op_mes(mes,
         return True
 
     elif mes_controle < maplengte:
-        print("te weinig")
+        print("te veel")
         # afwijkings_waarde += min_waarde_rol
         print(mes_controle, maplengte)
         # mappen opschonen
@@ -71,7 +71,7 @@ def check_map_op_mes(mes,
         return False
 
     else :
-        print("te veel")
+        print("te weinig")
         print(mes_controle, maplengte)
         return False
 

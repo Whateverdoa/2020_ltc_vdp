@@ -213,6 +213,7 @@ while True:
                                                    aantal_banen,
                                                    afwijkings_waarde)
             if check_1 is not True:
+                sg.popup("niet gemaakt teveel of te weinig , stel met afwijking bij")
                 print("message")
 
             else:
